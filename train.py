@@ -31,15 +31,8 @@ def load_small_dataset(tokenizer, seq_len=128, max_samples=1000):
     """Loads and tokenizes a small slice of a dataset."""
     print(f"Attempting to load and tokenize dataset (max_samples={max_samples}, seq_len={seq_len})...")
     # Using wikitext as it's commonly available and suitable
-    try:
-        raw_dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split='train')
-    except Exception as e:
-        print(f"Failed to load wikitext, trying oscar-mini: {e}")
-        try:
-             raw_dataset = load_dataset("nthngdy/oscar-mini", "unshuffled_deduplicated_en",split='train')
-        except Exception as e2:
-             print(f"Failed to load any dataset: {e2}")
-             return None # Indicate failure
+    
+    raw_dataset = load_dataset("nthngdy/oscar-mini", "unshuffled_deduplicated_en",split='train',trust_remote_code=True)
 
     # Use only a subset of samples for quick experimentation
     if len(raw_dataset) > max_samples:
