@@ -166,8 +166,8 @@ def main():
 
     effective_batch_size = args.batch_size_per_device * fabric.world_size * args.grad_accum_steps
     fabric.print(f"Effective batch size: {effective_batch_size}")
-    fabric.print(f"Using Strategy: {fabric.strategy.name}")
-    fabric.print(f"Using Precision: {fabric.precision}")
+    fabric.print(f"Using Strategy: {type(fabric.strategy).__name__}")
+    fabric.print(f"Using Precision: {fabric._precision}")
 
     fabric.print(f"Loading tokenizer: {args.model_name_or_path}")
     # Load tokenizer once, it's typically small and doesn't need distribution
@@ -244,7 +244,6 @@ def main():
 
     # --- Setup Model FIRST with Fabric (this wraps it with FSDP) ---
     fabric.print("Setting up model with Fabric (applying FSDP)...")
-    model = fabric.setup(model)
     # --- End Fabric Model Setup ---
 
     # --- Setup Optimizer and Scheduler AFTER model setup ---
@@ -274,7 +273,9 @@ def main():
 
     # --- Setup Optimizer and Dataloaders with Fabric ---
     fabric.print("Setting up optimizer and dataloaders with Fabric...")
-    optimizer = fabric.setup(optimizer) # Setup the optimizer
+    
+    model,optimizer = fabric.setup(model,optimizer)
+    #optimizer = fabric.setup(optimizer) # Setup the optimizer
     train_dataloader = fabric.setup_dataloaders(train_dataloader) # Setup dataloader for distributed sampling
     # --- End Fabric Setup ---
 
