@@ -1,4 +1,4 @@
-lightning run model train.py \
+python train.py \
     --accelerator=cuda \
     --devices=2 \
     --strategy=fsdp \

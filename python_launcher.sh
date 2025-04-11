@@ -1,6 +1,6 @@
 python train.py \
     --accelerator=cuda \
-    --devices=1 \
+    --devices=2 \
     --strategy=fsdp \
     --precision=bf16-mixed \
     --batch_size_per_device=2 \
